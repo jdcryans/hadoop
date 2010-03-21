@@ -863,6 +863,16 @@ public class FSEditLog {
       metrics.transactions.inc((end-start));
   }
 
+  /**
+   * Syncs all pending transactions form all threads.
+   */
+  synchronized void logSyncAll() throws IOException {
+    // stores in the Thread local variable of current threads
+    TransactionId id = myTransactionId.get();
+    id.txid = txid;
+    logSync();
+  }
+
   //
   // Sync all modifications done by this thread.
   //
