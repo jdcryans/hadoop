@@ -3238,9 +3238,9 @@ public class DFSClient implements FSConstants, java.io.Closeable {
     }
 
     private void waitForAckedSeqno(long seqnumToWaitFor) throws IOException {
-      while (!closed) {
-        isClosed();
-        synchronized (ackQueue) {
+      synchronized (ackQueue) {
+        while (!closed) {
+          isClosed();
           if (lastAckedSeqno >= seqnumToWaitFor) {
             break;
           }
@@ -3249,6 +3249,7 @@ public class DFSClient implements FSConstants, java.io.Closeable {
           } catch (InterruptedException ie) {}
         }
       }
+      isClosed();
     }
  
     /**
